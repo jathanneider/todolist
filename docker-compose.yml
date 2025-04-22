@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=tododb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"                  # ← host:container
+    environment:
+      SPRING_DATASOURCE_URL:       jdbc:postgresql://db:5432/tododb
+      SPRING_DATASOURCE_USERNAME:  postgres
+      SPRING_DATASOURCE_PASSWORD:  postgres
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
